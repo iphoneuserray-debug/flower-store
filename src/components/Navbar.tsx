@@ -2,9 +2,9 @@ import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Cart } from "../Cart"
+import { Cart } from "./Cart"
 
-export const Header = () => {
+export const NavBar = () => {
     return (<header>
         <div className="flex items-center gap-4">
             <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">

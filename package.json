@@ -11,8 +11,6 @@
     },
     "dependencies": {
         "@fancyapps/ui": "^6.1.12",
-        "@shopify/cli": "^3.91.0",
-        "@shopify/storefront-api-client": "^1.0.9",
         "@tailwindcss/vite": "^4.2.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -23,7 +21,7 @@
         "radix-ui": "^1.4.3",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-router-dom": "^7.13.0",
+        "react-router-dom": "^7.13.1",
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.2.0",
