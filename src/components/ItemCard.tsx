@@ -11,9 +11,9 @@ interface Props {
 }
 
 
-export default function ItemCard({ title, price, imgSrc, badge, to }: Props) {
+export default function ItemCard({ title, price, imgSrc, badge }: Props) {
     return (
-        <Link to={to ?? `/item/${title}`} >
+        <Link to={`/detail/${title}`} >
             <Card className="relative max-w-[280px] mx-auto pt-0 overflow-hidden hover:shadow-lg">
                 <img src={imgSrc} alt="Image" className="relative z-20 aspect-[4/5] object-cover" />
                 <CardHeader>
