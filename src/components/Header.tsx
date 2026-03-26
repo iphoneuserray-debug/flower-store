@@ -15,7 +15,7 @@ export default function Header() {
 
             <div className="w-full flex items-center gap-3 px-4 py-3 bg-[#CCBEB1]">
 
-                {/* Narrow: hamburger (hidden on md+) */}
+                {/* Narrow NavBar */}
                 <div className="md:hidden">
                     <NavBar />
                 </div>
@@ -42,25 +42,13 @@ export default function Header() {
                     <NavSearch />
                 </div>
 
-<<<<<<< HEAD
-                {/* Cart (always visible) */}
-                <Cart />
-
-                {/* User icon (wide only — narrow uses sidebar) */}
-                <Link
-                    to="/login"
-                    className="hidden md:flex items-center justify-center w-10 h-10 rounded-full border shadow-sm hover:bg-gray-100 transition"
-=======
                 {/* Cart */}
-                <div className="hidden md:block">
-                    <Cart />
-                </div>
+                <Cart />
 
                 {/* User icon */}
                 <Link
                     to="/login"
-                    className="flex items-center justify-center w-10 h-10 rounded-full border shadow-sm hover:bg-gray-100 transition"
->>>>>>> 2ea04b2a2ab458326c636e7fa83ec5c22ba72d0e
+                    className="hidden md:flex items-center justify-center w-10 h-10 rounded-full border shadow-sm hover:bg-gray-100 transition"
                 >
                     <User size={20} />
                 </Link>
