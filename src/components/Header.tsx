@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ShoppingCart, Menu } from 'lucide-react'
 import NavDrawer from './NavDrawer'
@@ -11,11 +11,41 @@ export default function Header() {
     const { cartCount } = useCart()
     const [cartOpen, setCartOpen] = useState(false)
     const [navOpen, setNavOpen] = useState(false)
+    const [cautionVisible, setCautionVisible] = useState(true)
+    const [badgeKey, setBadgeKey] = useState(0)
+    const prevCount = useRef(cartCount)
+    const lastScrollY = useRef(0)
     const isHome = pathname === '/'
+
+    useEffect(() => {
+        if (cartCount > prevCount.current) setBadgeKey(k => k + 1)
+        prevCount.current = cartCount
+    }, [cartCount])
+
+    useEffect(() => {
+        setCautionVisible(true)
+        lastScrollY.current = window.scrollY
+    }, [pathname])
+
+    useEffect(() => {
+        const onScroll = () => {
+            const y = window.scrollY
+            if (y > lastScrollY.current && y > 50) {
+                setCautionVisible(false)
+            } else if (y < lastScrollY.current) {
+                setCautionVisible(true)
+            }
+            lastScrollY.current = y
+        }
+        window.addEventListener('scroll', onScroll, { passive: true })
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
+
+    const iconsTop = isHome && cautionVisible ? '36px' : '8px'
 
     return (
         <>
-            {isHome && <Caution>Pick Up Only at Melbourne Center Every Tuesday</Caution>}
+            {isHome && <Caution visible={cautionVisible}>Pick Up Only at Melbourne Center Every Tuesday</Caution>}
 
             {/* Logo — only on non-home pages */}
             {!isHome && (
@@ -30,8 +60,8 @@ export default function Header() {
 
             {/* Right-side icons */}
             <div
-                className="fixed right-0 flex items-center px-4 py-2 z-[100] pointer-events-none"
-                style={{ top: isHome ? '36px' : '8px' }}
+                className="fixed right-0 flex items-center px-4 py-2 z-[100] pointer-events-none transition-[top] duration-300"
+                style={{ top: iconsTop }}
             >
                 <div className="flex items-center gap-1 pointer-events-auto">
                     {/* Cart */}
@@ -41,7 +71,7 @@ export default function Header() {
                     >
                         <ShoppingCart className="h-8 w-8" strokeWidth={2} strokeLinecap="square" strokeLinejoin="miter" />
                         {cartCount > 0 && (
-                            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-black text-white text-xs font-bold shadow">
+                            <span key={badgeKey} className="cart-pop absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-black text-white text-xs font-bold shadow">
                                 {cartCount}
                             </span>
                         )}

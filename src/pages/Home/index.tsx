@@ -18,8 +18,6 @@ export default function Home() {
     const [tagImages, setTagImages] = useState<Record<string, string>>({})
 
     useEffect(() => {
-        // Add scroll-snap to html element
-        document.documentElement.classList.add('home-snap')
         fetchProducts()
             .then((products: Product[]) => {
                 setFilmProducts(products.map(p => ({ name: p.title, price: p.price, handle: p.handle, src: p.imgSrc })))
@@ -33,7 +31,6 @@ export default function Home() {
                 setTagImages(imgs)
             })
             .catch(() => {})
-        return () => { document.documentElement.classList.remove('home-snap') }
     }, [])
 
     return (

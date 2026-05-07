@@ -38,7 +38,7 @@ export const LongNavBar = () => {
                                 <li key={item}>
                                     <NavigationMenuLink asChild>
                                         <Link
-                                            to={`/products/${item.toLowerCase()}`}
+                                            to={`/products?tag=${item.toLowerCase()}`}
                                             className="block px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors"
                                         >
                                             {item}
@@ -58,7 +58,7 @@ export const LongNavBar = () => {
                                 <li key={item}>
                                     <NavigationMenuLink asChild>
                                         <Link
-                                            to={`/products/${item.toLowerCase()}`}
+                                            to={`/products?tag=${item.toLowerCase()}`}
                                             className="block px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors"
                                         >
                                             {item}

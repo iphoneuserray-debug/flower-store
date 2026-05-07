@@ -21,6 +21,7 @@ export interface Product {
     images: { src: string; alt: string }[]
     description: string
     tags: string[]
+    inStock: boolean
 }
 
 function mapProduct(p: BackendProduct): Product {
@@ -38,6 +39,7 @@ function mapProduct(p: BackendProduct): Product {
         images,
         description: p.description,
         tags: p.tags ?? [],
+        inStock: p.availability ?? true,
     }
 }
 

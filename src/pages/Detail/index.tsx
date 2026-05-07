@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Minus, Plus, Heart, Share2 } from 'lucide-react'
+import { Minus, Plus, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { fetchProductByHandle } from '@/lib/api'
 import type { Product } from '@/lib/api'
@@ -68,7 +68,6 @@ function NotFound() {
 export default function Detail() {
     const { name } = useParams<{ name: string }>()
     const [qty, setQty] = useState(1)
-    const [saved, setSaved] = useState(false)
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -151,12 +150,6 @@ export default function Detail() {
                     Add to Cart
                 </button>
                 <button
-                    onClick={() => setSaved(v => !v)}
-                    className="w-12 h-12 border border-black/20 flex items-center justify-center hover:bg-black/5 transition-colors"
-                >
-                    <Heart size={18} fill={saved ? '#e00' : 'none'} color={saved ? '#e00' : 'currentColor'} />
-                </button>
-                <button
                     onClick={handleShare}
                     className="w-12 h-12 border border-black/20 flex items-center justify-center hover:bg-black/5 transition-colors"
                 >
@@ -166,11 +159,16 @@ export default function Detail() {
         </div>
     )
 
+    const crumbItems = [
+        { label: 'Products', href: '/products' },
+        { label: product.title },
+    ]
+
     return (
         <div>
             {/* Mobile */}
             <div className="lg:hidden">
-                <Crumb />
+                <Crumb items={crumbItems} />
                 <div className="flex flex-col gap-8 mt-4">
                     <div className="w-full">
                         <ImageGallery images={product.images} />
@@ -184,7 +182,7 @@ export default function Detail() {
                     <ImageGallery images={product.images} />
                 </div>
                 <div className="flex-1 px-12 pt-2 flex flex-col gap-5">
-                    <Crumb />
+                    <Crumb items={crumbItems} />
                     {productInfo}
                 </div>
             </div>

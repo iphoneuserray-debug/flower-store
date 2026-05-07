@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useLocation, Link } from "react-router-dom";
 import {
     Breadcrumb,
@@ -8,10 +9,19 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-// 路径展示
-export function Crumb() {
+interface CrumbItem { label: string; href?: string }
+interface CrumbProps { items?: CrumbItem[] }
+
+export function Crumb({ items }: CrumbProps = {}) {
     const { pathname } = useLocation();
-    const segments = pathname.split("/").filter(Boolean);
+
+    const resolved: CrumbItem[] = items ?? pathname
+        .split("/")
+        .filter(Boolean)
+        .map((segment, index, arr) => ({
+            label: segment.charAt(0).toUpperCase() + segment.slice(1),
+            href: index < arr.length - 1 ? "/" + arr.slice(0, index + 1).join("/") : undefined,
+        }));
 
     return (
         <Breadcrumb className="mt-3 mb-3">
@@ -21,27 +31,20 @@ export function Crumb() {
                         <Link to="/">Home</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
-                {/* 路径添加链接 */}
-                {segments.map((segment, index) => {
-                    const href = "/" + segments.slice(0, index + 1).join("/");
-                    const isLast = index === segments.length - 1;
-                    const label = segment.charAt(0).toUpperCase() + segment.slice(1);
-
-                    return (
-                        <>
-                            <BreadcrumbSeparator key={`sep-${index}`} />
-                            <BreadcrumbItem key={href}>
-                                {isLast ? (
-                                    <BreadcrumbPage>{label}</BreadcrumbPage>
-                                ) : (
-                                    <BreadcrumbLink asChild>
-                                        <Link to={href}>{label}</Link>
-                                    </BreadcrumbLink>
-                                )}
-                            </BreadcrumbItem>
-                        </>
-                    );
-                })}
+                {resolved.map((item, index) => (
+                    <Fragment key={index}>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            {item.href ? (
+                                <BreadcrumbLink asChild>
+                                    <Link to={item.href}>{item.label}</Link>
+                                </BreadcrumbLink>
+                            ) : (
+                                <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                            )}
+                        </BreadcrumbItem>
+                    </Fragment>
+                ))}
             </BreadcrumbList>
         </Breadcrumb>
     )

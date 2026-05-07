@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { X, User, Search, ChevronUp, ChevronDown } from 'lucide-react'
 
 interface DrawerProps {
@@ -29,21 +29,21 @@ export function Drawer({ open, onClose, children }: DrawerProps) {
 }
 
 const EVENT_TYPES = [
-    { label: 'Wedding', href: '/products/wedding' },
-    { label: 'Birthday', href: '/products/birthday' },
-    { label: 'Anniversary', href: '/products/anniversary' },
-    { label: 'Corporate', href: '/products/corporate' },
-    { label: 'Funeral', href: '/products/funeral' },
+    { label: 'Wedding', href: '/products?tag=wedding' },
+    { label: 'Birthday', href: '/products?tag=birthday' },
+    { label: 'Anniversary', href: '/products?tag=anniversary' },
+    { label: 'Corporate', href: '/products?tag=corporate' },
+    { label: 'Funeral', href: '/products?tag=funeral' },
 ]
 
 const FLOWER_TYPES = [
-    { label: 'Rose', href: '/products/rose' },
-    { label: 'Tulip', href: '/products/tulip' },
-    { label: 'Lily', href: '/products/lily' },
-    { label: 'Sunflower', href: '/products/sunflower' },
-    { label: 'Orchid', href: '/products/orchid' },
-    { label: 'Daisy', href: '/products/daisy' },
-    { label: 'Peony', href: '/products/peony' },
+    { label: 'Rose', href: '/products?tag=rose' },
+    { label: 'Tulip', href: '/products?tag=tulip' },
+    { label: 'Lily', href: '/products?tag=lily' },
+    { label: 'Sunflower', href: '/products?tag=sunflower' },
+    { label: 'Orchid', href: '/products?tag=orchid' },
+    { label: 'Daisy', href: '/products?tag=daisy' },
+    { label: 'Peony', href: '/products?tag=peony' },
 ]
 
 interface NavDrawerProps {
@@ -54,6 +54,17 @@ interface NavDrawerProps {
 export default function NavDrawer({ open, onClose }: NavDrawerProps) {
     const [eventOpen, setEventOpen] = useState(false)
     const [flowerOpen, setFlowerOpen] = useState(false)
+    const [query, setQuery] = useState('')
+    const navigate = useNavigate()
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault()
+        const q = query.trim()
+        if (!q) return
+        navigate(`/products?q=${encodeURIComponent(q)}`)
+        setQuery('')
+        onClose()
+    }
 
     return (
         <Drawer open={open} onClose={onClose}>
@@ -75,16 +86,20 @@ export default function NavDrawer({ open, onClose }: NavDrawerProps) {
                 </div>
 
                 {/* Search */}
-                <div className="mb-8">
+                <form onSubmit={handleSearch} className="mb-8">
                     <div className="flex items-center gap-2 border-b border-white/20 pb-2">
-                        <Search size={14} className="text-white/40" strokeWidth={1.5} />
+                        <button type="submit" className="shrink-0 hover:opacity-60 transition-opacity">
+                            <Search size={14} className="text-white/40" strokeWidth={1.5} />
+                        </button>
                         <input
                             type="search"
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
                             placeholder="Search..."
                             className="bg-transparent text-white placeholder-white/30 text-sm uppercase tracking-widest font-bold outline-none w-full"
                         />
                     </div>
-                </div>
+                </form>
 
                 {/* Nav links */}
                 <nav className="flex flex-col gap-5 bg-black min-h-full">

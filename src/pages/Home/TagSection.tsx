@@ -32,7 +32,7 @@ interface TagSectionProps {
 export default function TagSection({ title, subCategories, tagImages, reverse = false, showContact = false }: TagSectionProps) {
     const items = subCategories.map(label => ({
         label,
-        href: `/products/${label.toLowerCase()}`,
+        href: `/products?tag=${label.toLowerCase()}`,
         image: getImage(label, tagImages),
     }))
 

@@ -5,9 +5,9 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import { Crumb } from '@/components/Crumb'
 import { useCart } from '@/context/CartContext'
 
-const STRIPE_PK = 'pk_test_51TL0lbPRK5sLXdEcUJ3V5vM9U5RJR08tbA21sM6c25DMjQn9cynOgyyeB3h4aTKk6jmArtdWvNaR82QHW7o4ePGM00b6vQfOnc'
+const STRIPE_PK = (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined) ?? ''
 const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined) ?? 'http://localhost:3000'
-const stripePromise = loadStripe(STRIPE_PK)
+const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK) : null
 
 const inputCls = 'w-full border border-black py-3 px-4 text-sm focus:outline-none bg-transparent placeholder:text-black/30 rounded-none'
 const labelCls = 'block text-xs tracking-[0.25em] uppercase text-black/40 mb-1'
@@ -19,7 +19,10 @@ async function createPaymentIntent(cart: ReturnType<typeof useCart>['cart'], det
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cart: items, ...details }),
     })
-    if (!res.ok) throw new Error(`Checkout failed: ${res.status}`)
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body?.message ?? `Checkout failed: ${res.status}`)
+    }
     return (await res.json()).clientSecret as string
 }
 
@@ -85,6 +88,8 @@ export default function Checkout() {
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
     const [postalCode, setPostalCode] = useState('')
+    const [scheduledDate, setScheduledDate] = useState('')
+    const [scheduledTime, setTimeSlot] = useState('09:00-13:00')
     const [couponCode, setCouponCode] = useState('')
     const [coupon, setCoupon] = useState<Coupon | null>(null)
     const [couponError, setCouponError] = useState<string | null>(null)
@@ -128,7 +133,11 @@ export default function Checkout() {
             ...(phone && { phone }),
             ...(wechat && { wechatNumber: wechat }),
             deliveryType,
-            ...(deliveryType === 'delivery' ? { deliveryAddress: { line1, city, state, postalCode } } : { pickupLocationId: pickupId }),
+            ...(scheduledDate && { scheduledDate }),
+            scheduledTime,
+            ...(deliveryType === 'delivery'
+                ? { deliveryAddress: { line1, city, state, postalCode } }
+                : { pickupLocationId: pickupId }),
             ...(coupon && { couponCode: coupon.code }),
         }
         try {
@@ -288,6 +297,34 @@ export default function Checkout() {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Date + time */}
+                                <div className="flex flex-col gap-4 mt-2">
+                                    <div>
+                                        <label className={labelCls}>
+                                            {deliveryType === 'pickup' ? 'Pick-up Date' : 'Delivery Date'}
+                                        </label>
+                                        {deliveryType === 'pickup' && (
+                                            <p className="text-xs text-black/40 mb-1">Pick-up available every Tuesday</p>
+                                        )}
+                                        <input
+                                            required
+                                            type="date"
+                                            value={scheduledDate}
+                                            onChange={e => setScheduledDate(e.target.value)}
+                                            min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+                                            className={inputCls}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className={labelCls}>Preferred Time</label>
+                                        <select value={scheduledTime} onChange={e => setTimeSlot(e.target.value)} className={inputCls}>
+                                            <option value="09:00-13:00">Morning (9 am – 1 pm)</option>
+                                            <option value="13:00-17:00">Afternoon (1 pm – 5 pm)</option>
+                                            <option value="17:00-20:00">Evening (5 pm – 8 pm)</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             {apiError && <p className="text-sm text-red-600 uppercase tracking-widest">{apiError}</p>}

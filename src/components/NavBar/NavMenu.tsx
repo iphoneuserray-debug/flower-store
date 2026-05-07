@@ -35,7 +35,7 @@ function SubMenu({ label, items, setOpen }: SubMenuProps) {
                         {items.map((value) => (
                             <Link
                                 key={value}
-                                to={`/products/${value.toLowerCase()}`}
+                                to={`/products?tag=${value.toLowerCase()}`}
                                 onClick={() => setOpen(false)}
                                 className={`${subLinkClass} hover:bg-white/30 px-2 py-1 rounded-md`}
                             >

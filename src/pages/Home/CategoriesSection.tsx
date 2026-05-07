@@ -3,17 +3,17 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 
 const CATEGORIES = [
-    { label: 'Wedding', image: '/category/wedding.jpg', href: '/products/Wedding' },
-    { label: 'Birthday', image: '/category/birthday.jpg', href: '/products/Birthday' },
-    { label: 'Anniversary', image: 'https://picsum.photos/seed/cat-anniversary/300/700', href: '/products/Anniversary' },
-    { label: 'Rose', image: '/category/rose.jpg', href: '/products/Rose' },
-    { label: 'Tulip', image: '/category/tulip.jpg', href: '/products/Tulip' },
-    { label: 'Lily', image: '/category/lily.jpg', href: '/products/Lily' },
+    { label: 'Wedding', image: '/category/wedding.jpg', href: '/products?tag=wedding' },
+    { label: 'Birthday', image: '/category/birthday.jpg', href: '/products?tag=birthday' },
+    { label: 'Anniversary', image: 'https://picsum.photos/seed/cat-anniversary/300/700', href: '/products?tag=anniversary' },
+    { label: 'Rose', image: '/category/rose.jpg', href: '/products?tag=rose' },
+    { label: 'Tulip', image: '/category/tulip.jpg', href: '/products?tag=tulip' },
+    { label: 'Lily', image: '/category/lily.jpg', href: '/products?tag=lily' },
 ]
 
 const QUICK_LINKS = [
     { label: 'Shop All', href: '/products' },
-    { label: 'Subscription', href: '/products/subscription' },
+    { label: 'Subscription', href: '/products?tag=subscription' },
     { label: 'Contact Us', href: '/contact' },
 ]
 
